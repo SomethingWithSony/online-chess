@@ -41,48 +41,57 @@ def main():
       if event.type == pygame.QUIT:
         running = False
       if event.type == pygame.MOUSEBUTTONDOWN:
-        row, col = pygame.mouse.get_pos()
+        col, row = pygame.mouse.get_pos()
         row = math.ceil(row / 50) - 1
         col = math.ceil(col / 50) - 1
 
+        board_info = game_state.board[row][col]
         player_click = (row,col)
 
-        if not player_position:
-          player_position.append(player_click)
-        else:
-          if player_position[0] != player_click:
-            player_position.append(player_click)
-            
-            if game_state.board[row][col] != 0 :
-              player_position.clear() # problem need to check if whose turn it is 
-              player_position.append(player_click)
-          else:
-            player_position.clear()
+        if len(player_position) == 2:
+          player_position = []
 
+        if not player_position: # No Move 
+          if board_info != 0:
+            player_position.append(player_click)
+        else:
+         
+          if player_position[0] == player_click:
+            player_position = [] # Resets position if same pawn is clicked
+          else:
+            player_position.append(player_click)
+          
+
+        
+        print(player_position)
+      
+      if event.type == pygame.MOUSEBUTTONUP:
+        col, row = pygame.mouse.get_pos()
+        row = math.ceil(row / 50) - 1
+        col = math.ceil(col / 50) - 1
+
+        board_info = game_state.board[row][col]
+        player_click = (row,col)
+
+        # Lets say if its white turn and gets on a white piece
+        if not player_position:
+          pass # Do nothing
+        else: 
+          if len(player_position) == 2:
+            player_position = []
+          else:
+            if board_info == 0:
+              player_position.append(player_click)
           
 
         player_click = ()
         print(player_position)
-          
-      # elif event.type == pygame.MOUSEBUTTONUP:
-      #   row, col = pygame.mouse.get_pos()
-      #   row = math.ceil(row / 50) - 1
-      #   col = math.ceil(col / 50) - 1
-        
-      #   player_click = (row,col)
-
-        
+      """
+      Chess player clicks on a piece and its the first click
+      Chess clicks on a piece and its the second click
+      
+      """
        
-          
-                  
-      #   player_click = ()
-        
-        
-
-        
-
-    
-    # mouse_click(game_state, move)
     draw_states(screen,game_state,move)
 
     clock.tick(framerate)
