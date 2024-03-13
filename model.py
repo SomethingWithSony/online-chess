@@ -21,9 +21,20 @@ class ChessBoard:
     self.moveLog = [] # Save moves
 
   def make_move(self,move):
-    self.board[move.start_row][move.start_col] = 0
-    self.board[move.end_row][move.end_col] = move.piece_moved
+    
 
+    if self.white_turn and "w" in move.piece_moved:
+      self.board[move.start_row][move.start_col] = 0
+      self.board[move.end_row][move.end_col] = move.piece_moved
+      self.white_turn = not self.white_turn
+    elif not self.white_turn  and "b" in move.piece_moved:
+      self.board[move.start_row][move.start_col] = 0
+      self.board[move.end_row][move.end_col] = move.piece_moved
+      self.white_turn = not self.white_turn
+
+    
+      
+    
 
 
 # Start by decomposing needs of the class
