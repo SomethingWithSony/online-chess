@@ -1,5 +1,5 @@
 import pygame as pygame
-from model import ChessBoard
+from model import ChessBoard, Move
 import math
 
 WIDTH = HEIGHT = 400
@@ -24,14 +24,13 @@ def main():
   load_images()
   
   game_state = ChessBoard()
-  move = game_state.Move()
   clock = pygame.time.Clock()
 
   player_position = [] # Stores the initial and the final position 
   player_click = () # Stores de col and row when a player clicks a square
   same_play = True 
 
-  framerate = 30
+  framerate = 60
   running = True
 
   while running:
@@ -40,6 +39,12 @@ def main():
       # Quit if X is pressed
       if event.type == pygame.QUIT:
         running = False
+
+      if len(player_position) == 2:
+            move = Move(player_position[0],player_position[1],game_state.board)
+            game_state.make_move(move)
+            player_position = []
+
       if event.type == pygame.MOUSEBUTTONDOWN:
         col, row = pygame.mouse.get_pos()
         row = math.ceil(row / 50) - 1
@@ -47,9 +52,6 @@ def main():
 
         board_info = game_state.board[row][col]
         player_click = (row,col)
-
-        if len(player_position) == 2:
-          player_position = []
 
         if not player_position: # No Move 
           if board_info != 0:
@@ -65,7 +67,7 @@ def main():
         
         print(player_position)
       
-      if event.type == pygame.MOUSEBUTTONUP:
+      elif event.type == pygame.MOUSEBUTTONUP:
         col, row = pygame.mouse.get_pos()
         row = math.ceil(row / 50) - 1
         col = math.ceil(col / 50) - 1
@@ -77,22 +79,21 @@ def main():
         if not player_position:
           pass # Do nothing
         else: 
-          if len(player_position) == 2:
-            player_position = []
-          else:
             if board_info == 0:
               player_position.append(player_click)
           
 
         player_click = ()
         print(player_position)
+     
+      
       """
       Chess player clicks on a piece and its the first click
       Chess clicks on a piece and its the second click
       
       """
        
-    draw_states(screen,game_state,move)
+    draw_states(screen,game_state)
 
     clock.tick(framerate)
     pygame.display.flip()
@@ -121,9 +122,9 @@ def draw_pieces(screen, game_state):
 """
 Responsible for all graphics within a current game state
 """
-def draw_states(screen, game_state, move):
+def draw_states(screen, game_state):
   draw_board(screen)
-  # highlight_piece(screen, move)
+
   draw_pieces(screen,game_state)
   
 

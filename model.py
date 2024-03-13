@@ -1,5 +1,5 @@
 
-class ChessBoard():
+class ChessBoard:
   """
   This class handles the state of the board, piece movement, and game logic.
   """
@@ -18,42 +18,47 @@ class ChessBoard():
       ["wr","wn","wb","wq","wk","wb","wn","wr"],
     ]
     self.white_turn = True
-    self.moveLog = [] # Interesting
+    self.moveLog = [] # Save moves
 
-  class Move():
-    def __init__(self):
-      self.selected = False
-      self.position = []
-      self.piece = ""
-      self.end_position = []
+  def make_move(self,move):
+    self.board[move.start_row][move.start_col] = 0
+    self.board[move.end_row][move.end_col] = move.piece_moved
 
-  # Check if movement is valid
-  # If valid update start position to 0 and put piece in end_position
-  # Validations 
-  # Check piece movement pattern
-      
 
-    
 
-    
+# Start by decomposing needs of the class
+class Move:
+
+  # In ches rows are called ranks and cols are called files
+  # This will be used to store player movements 
+  ranks_to_rows = {"8": 0, "7": 1, "6": 2, "5": 3, "4": 4, "3": 5, "2": 6, "1": 7 }
+  rows_to_ranks = {ro: ra for ra, ro in ranks_to_rows.items()}
+
+  files_to_cols = {"a": 0, "b" : 1, "c": 2, "d": 3, "e":  4, "f": 5, "g": 6 , "h": 7}
+  cols_to_files = {f: c for c, f in files_to_cols.items()}
+
+  def __init__(self,start_square,end_square, board):
+    self.start_row = start_square[0]
+    self.start_col = start_square[1]
+
+    self.end_row = end_square[0]
+    self.end_col = end_square[1]
+
+    self.piece_moved = board[self.start_row][self.start_col]
+    self.piece_captured = board[self.end_row][self.end_col]
+
+  def get_chess_notation(self):
+    # Study real chess notation and replicate it 
+    return self.get_rank_file(self.start_row,self.start_col) + self.get_rank_file(self.end_row,self.end_col)
   
-class Pawm():
-  pass
+  def get_rank_file(self, row, col):
+    return self.cols_to_files[col] + self.rows_to_ranks[row] 
 
-class Rook():
-  pass
 
-class Knight():
-  pass
 
-class Queen():
-  pass
+    
 
-class King():
-  pass
-
-class Bishop():
-  pass
+    
 
 
 # Game Logic
